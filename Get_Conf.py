@@ -9,7 +9,7 @@ class Proj_Conf(object):
 
     def __init__(self):
         self.usb_list = []
-        self.cmd_sed = "cd /home/kevin/Desktop/cgminer-4.8.0 && nohup ./cgminer --bmsc-options 115200:1 "
+        self.cmd_sed = "cd /root/proj_path/cgminer-4.8.0 && nohup ./cgminer --bmsc-options 115200:1 "
         self.cmd_dict = {
             "AntPool": "",
             "F2Pool": "",
@@ -17,20 +17,20 @@ class Proj_Conf(object):
             "BTCChina Pool": "",
             "BitFury": "",
             "KnCMiner": "",
+            "AntPool.1": "",
         }
         self.pool_conf = {
-            "AntPool": {"user": "-u ZHANGWENHUI.1", "url": "-o solo.antpool.com:3333", "usb_id": "--usb ", "log": "--logfile /home/kevin/Desktop/antpool.log" ,"enable": False},
-            "F2Pool": {"user": "-u antforzhw.1", "url": "-o stratum.f2pool.com:3333", "usb_id": "--usb ", "log": "--logfile /home/kevin/Desktop/f2pool.log","enable": False},
-            "BW.COM": {"user": "-u antminer.1", "url": "-o stratum+tcp://stratum_0310.bw.com:3333", "usb_id": "--usb ", "log": "--logfile /home/kevin/Desktop/BW_COM.log", "enable": False},
-            "BTCChina Pool": {"user": "-u antforzhw.1 -p sishen2008", "url": "-o stratum+tcp://stratum.btcchina.com:3333", "usb_id": "--usb ", "log": "--logfile /home/kevin/Desktop/BTCChina_Pool.log", "enable": False},
-            "BitFury": {},
-            "KnCMiner": {},
+            "AntPool": {"user": "-u ZHANGWENHUI.1", "url": "-o solo.antpool.com:3333", "usb_id": "--usb ", "log": "--logfile /var/log/cgminer/antpool.log" ,"enable": False},
+            "F2Pool": {"user": "-u antforzhw.1", "url": "-o stratum.f2pool.com:3333", "usb_id": "--usb ", "log": "--logfile /var/log/cgminer/f2pool.log","enable": False},
+            "BW.COM": {"user": "-u antminer.1", "url": "-o stratum+tcp://stratum_0310.bw.com:3333", "usb_id": "--usb ", "log": "--logfile /var/log/cgminer/BW_COM.log", "enable": False},
+            "BTCChina Pool": {"user": "-u antforzhw.1 -p sishen2008", "url": "-o stratum+tcp://stratum.btcchina.com:3333", "usb_id": "--usb ", "log": "--logfile /var/log/cgminer/BTCChina_Pool.log", "enable": False},
+            "Slush": {"user": "-u antforzhw.1", "url": "-o stratum+tcp://cn.stratum.bitcoin.cz:3333", "usb_id": "--usb ", "log": "--logfile /var/log/cgminer/Slush.log", "enable": False},
+            "AntPool.1": {"user": "-u ZHANGWENHUI", "url": "-o solo.antpool.com:3333", "usb_id": "--usb ", "log": "--logfile /var/log/cgminer/antpool.1.log" ,"enable": False},
         }
 
     def conf_option(self):
 
         self.get_usb_id()
-        print self.usb_list
         self.set_pool_conf()
         self.init_cmd_dict()
 
@@ -59,9 +59,9 @@ class Proj_Conf(object):
         for pool_name, conf in self.pool_conf.items():
 
             if conf.get("enable"):
-                pool_cmd = "%s %s %s %s %s &" % (self.cmd_sed, conf.get("user", ""), conf.get("url", ""), conf.get("usb_id", ""), conf.get("log", ""))
+                pool_cmd = "%s %s %s %s %s >/dev/null 2>error_log &" % (self.cmd_sed, conf.get("user", ""), conf.get("url", ""), conf.get("usb_id", ""), conf.get("log", ""))
                 self.cmd_dict[pool_name] = pool_cmd
-        print "after init cmd dict, self.cmd_dit : %s" % str(self.cmd_dict)
+        # print "after init cmd dict, self.cmd_dit : %s" % str(self.cmd_dict)
 
 
     def run_cgminer(self):

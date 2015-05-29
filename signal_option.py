@@ -19,9 +19,11 @@ class Signal_Sender(object):
             try:
 
                 res_context = urllib2.urlopen(url, body).read()
-                print "target_url: %s res_context: %s hash_value : %s" % (url, res_context, body)
+                global_param.log.error("target_url: %s res_context: %s hash_value : %s" % (url, res_context, body))
 
             except Exception, err:
+                global_param.log.error(traceback.format_exc())
+                global_param.log.error(sys.exc_info()[0])
                 print(traceback.format_exc())
                 print(sys.exc_info()[0])
             finally:
@@ -35,21 +37,23 @@ class Signal_Sender(object):
 
             for key, value in global_param.hash_dict.items():
                 time.sleep(2)
-                if float(value) < time.time() - 30:
+                if float(value) < time.time() - 600:
                     if cls.send_signal(key):
                         del global_param.hash_dict[key]
-            print "now hash_dict: %s " % global_param.hash_dict
+            # print "now hash_dict: %s " % global_param.hash_dict
         global_param.lock_dict["hash_dict"].release()
 
 
     @classmethod
     def monit_loop(cls):
 
+        time.sleep(100)
         while True:
-            time.sleep(10)
-            print "start send signal"
+
+            global_param.log.warning("start send signal: ")
+            print "start send signal: "
             cls.change_signal()
-            time.sleep(20)
+            time.sleep(40)
 
 
 if __name__ == "__main__":
